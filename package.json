@@ -1,0 +1,220 @@
+{
+  "name": "markdown-comments",
+  "displayName": "Redline — Markdown Comments",
+  "description": "Comment on Markdown right in VS Code. Comments live inside the .md file, invisible to renderers and readable by any AI agent.",
+  "version": "0.2.0",
+  "license": "MIT",
+  "icon": "media/icon.png",
+  "galleryBanner": {
+    "color": "#0d1117",
+    "theme": "dark"
+  },
+  "publisher": "redline",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alxfain/vscode-redline-markdown-comments.git"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "Redline never runs code from the workspace. In Restricted Mode the settings below are ignored at workspace level.",
+      "restrictedConfigurations": [
+        "redline.allowRemoteImages",
+        "redline.openByDefault"
+      ]
+    },
+    "virtualWorkspaces": {
+      "supported": "limited",
+      "description": "Export to HTML/PDF needs a local file system."
+    }
+  },
+  "categories": [
+    "Other",
+    "Visualization"
+  ],
+  "keywords": [
+    "markdown",
+    "comments",
+    "review",
+    "annotate",
+    "ai"
+  ],
+  "main": "./out/extension.js",
+  "activationEvents": [],
+  "contributes": {
+    "customEditors": [
+      {
+        "viewType": "redline.preview",
+        "displayName": "Redline",
+        "selector": [
+          {
+            "filenamePattern": "*.md"
+          }
+        ],
+        "priority": "option"
+      }
+    ],
+    "commands": [
+      {
+        "command": "redline.openPreview",
+        "title": "Open Preview",
+        "category": "Redline",
+        "icon": {
+          "light": "media/icons/redline-light.svg",
+          "dark": "media/icons/redline-dark.svg"
+        }
+      },
+      {
+        "command": "redline.openSource",
+        "title": "Open Source",
+        "category": "Redline",
+        "icon": {
+          "light": "media/icons/source-light.svg",
+          "dark": "media/icons/source-dark.svg"
+        }
+      },
+      {
+        "command": "redline.nextComment",
+        "title": "Next Comment",
+        "category": "Redline"
+      },
+      {
+        "command": "redline.prevComment",
+        "title": "Previous Comment",
+        "category": "Redline"
+      },
+      {
+        "command": "redline.exportHtml",
+        "title": "Export to HTML",
+        "category": "Redline"
+      },
+      {
+        "command": "redline.exportPdf",
+        "title": "Export to PDF",
+        "category": "Redline"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "redline.openPreview",
+          "when": "resourceLangId == markdown && activeCustomEditorId != redline.preview",
+          "group": "navigation"
+        },
+        {
+          "command": "redline.openSource",
+          "when": "activeCustomEditorId == redline.preview",
+          "group": "navigation"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "redline.openPreview",
+          "when": "resourceExtname == .md",
+          "group": "navigation"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "redline.openPreview",
+        "key": "ctrl+alt+m",
+        "mac": "cmd+alt+m",
+        "when": "resourceLangId == markdown && activeCustomEditorId != redline.preview"
+      },
+      {
+        "command": "redline.openSource",
+        "key": "ctrl+alt+m",
+        "mac": "cmd+alt+m",
+        "when": "activeCustomEditorId == redline.preview"
+      },
+      {
+        "command": "redline.nextComment",
+        "key": "ctrl+alt+down",
+        "mac": "cmd+alt+down",
+        "when": "activeCustomEditorId == redline.preview"
+      },
+      {
+        "command": "redline.prevComment",
+        "key": "ctrl+alt+up",
+        "mac": "cmd+alt+up",
+        "when": "activeCustomEditorId == redline.preview"
+      }
+    ],
+    "configuration": {
+      "title": "Redline",
+      "properties": {
+        "redline.theme": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "light",
+            "dark",
+            "dark-dimmed",
+            "dark-high-contrast",
+            "light-colorblind",
+            "dark-colorblind",
+            "vscode"
+          ],
+          "default": "auto",
+          "description": "Preview theme. 'auto' picks light or dark to match VS Code; 'vscode' uses the colours of the active VS Code theme.",
+          "enumDescriptions": [
+            "Light or dark, following the VS Code theme kind",
+            "Light",
+            "Dark",
+            "Dark dimmed — soft grey-blue, closest to One Dark",
+            "Dark high contrast",
+            "Light, colorblind-friendly palette",
+            "Dark, colorblind-friendly palette",
+            "Colours of the active VS Code theme (One Dark Pro, Dracula, …)"
+          ]
+        },
+        "redline.openByDefault": {
+          "type": "boolean",
+          "default": false,
+          "description": "Open Markdown files in Redline instead of the text editor."
+        },
+        "redline.allowRemoteImages": {
+          "type": "boolean",
+          "default": false,
+          "description": "Load images from https:// URLs in the preview. Off by default: opening a document must not make network requests. Local images always work."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "node esbuild.mjs",
+    "watch": "node esbuild.mjs --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "vscode:prepublish": "node esbuild.mjs --production",
+    "test:integration": "npm run compile && node test/integration/run.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/vscode": "^1.85.0",
+    "@vscode/test-electron": "^3.1.0",
+    "@vscode/vsce": "^3.9.2",
+    "esbuild": "^0.24.2",
+    "jsdom": "^30.0.1",
+    "postcss": "^8.5.28",
+    "postcss-prefix-selector": "^2.2.1",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "dependencies": {
+    "dompurify": "^3.4.15",
+    "github-markdown-css": "^5.9.0",
+    "highlight.js": "^11.12.0",
+    "markdown-it": "^15.0.1",
+    "markdown-it-task-lists": "^2.1.1"
+  },
+  "bugs": {
+    "url": "https://github.com/alxfain/vscode-redline-markdown-comments/issues"
+  },
+  "homepage": "https://github.com/alxfain/vscode-redline-markdown-comments#readme"
+}

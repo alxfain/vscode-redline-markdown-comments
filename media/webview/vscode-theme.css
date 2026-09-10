@@ -1,0 +1,56 @@
+/* ═══════════════════════════════════════════════════════════════════
+   redline.theme = "vscode": the preview takes the colours of the active
+   VS Code theme. VS Code injects the --vscode-* variables into the webview's :root.
+
+   The base palette (.rl-light / .rl-dark) stays underneath — it provides the
+   layout and everything VS Code has no variable for. Only colours live here.
+   ═══════════════════════════════════════════════════════════════════ */
+
+.rl.rl-vscode {
+  --rl-canvas:       var(--vscode-editor-background);
+  --rl-fg:           var(--vscode-editor-foreground);
+  --rl-fg-muted:     var(--vscode-descriptionForeground);
+  --rl-fg-subtle:    var(--vscode-disabledForeground, var(--vscode-descriptionForeground));
+  --rl-border:       var(--vscode-widget-border, var(--vscode-panel-border));
+  --rl-border-soft:  var(--vscode-panel-border);
+  --rl-divider:      var(--vscode-panel-border);
+  --rl-sunk:         var(--vscode-editorWidget-background);
+  --rl-sunk-hover:   var(--vscode-list-hoverBackground);
+  --rl-link:         var(--vscode-textLink-foreground);
+  --rl-danger:       var(--vscode-errorForeground);
+  --rl-surface:        var(--vscode-editorWidget-background);
+  --rl-surface-border: var(--vscode-editorWidget-border, var(--vscode-widget-border, var(--vscode-panel-border)));
+  --rl-btn-bg:         var(--vscode-button-secondaryBackground);
+  --rl-btn-bg-hover:   var(--vscode-button-secondaryHoverBackground);
+}
+
+/* The document: the same variables the built-in VS Code preview uses */
+.rl-vscode .markdown-body { color: var(--rl-fg); }
+.rl-vscode .markdown-body h1, .rl-vscode .markdown-body h2, .rl-vscode .markdown-body h3,
+.rl-vscode .markdown-body h4, .rl-vscode .markdown-body h5, .rl-vscode .markdown-body h6 {
+  color: var(--rl-fg); border-bottom-color: var(--rl-divider);
+}
+.rl-vscode .markdown-body a { color: var(--rl-link); }
+.rl-vscode .markdown-body a:hover { color: var(--vscode-textLink-activeForeground, var(--rl-link)); }
+.rl-vscode .markdown-body code {
+  background: var(--vscode-textCodeBlock-background);
+  color: var(--vscode-textPreformat-foreground, var(--rl-fg));
+}
+.rl-vscode .markdown-body pre { background: var(--vscode-textCodeBlock-background); }
+.rl-vscode .markdown-body pre code { color: var(--rl-fg); background: transparent; }
+.rl-vscode .markdown-body blockquote {
+  color: var(--rl-fg-muted);
+  border-left-color: var(--vscode-textBlockQuote-border);
+  background: var(--vscode-textBlockQuote-background);
+  padding-top: 4px; padding-bottom: 4px;
+}
+.rl-vscode .markdown-body hr { background: var(--rl-divider); border: 0; }
+.rl-vscode .markdown-body table th, .rl-vscode .markdown-body table td { border-color: var(--rl-border); }
+.rl-vscode .markdown-body table tr { background: transparent; border-top-color: var(--rl-border); }
+.rl-vscode .markdown-body table tr:nth-child(2n) { background: var(--rl-sunk); }
+.rl-vscode .markdown-body img { background: transparent; }
+.rl-vscode .markdown-body kbd {
+  color: var(--rl-fg); background: var(--rl-sunk); border-color: var(--rl-border);
+  box-shadow: inset 0 -1px 0 var(--rl-border);
+}
+.rl-vscode .markdown-body .task-list-item-checkbox { accent-color: var(--vscode-checkbox-selectBackground, var(--rl-link)); }

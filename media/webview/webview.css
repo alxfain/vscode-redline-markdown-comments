@@ -1,0 +1,219 @@
+/* Webview layout. Values come only from tokens.css (var(--rl-*)). */
+
+html, body { margin: 0; padding: 0; }
+
+body.rl {
+  background: var(--rl-canvas);
+  color: var(--rl-fg);
+  font-family: var(--rl-font);
+}
+
+/* First frame: only the theme background, until the first render has scrolled to the starting line */
+body.rl-loading .rl-main { visibility: hidden; }
+
+/* ── Header ───────────────────────────────────────────────────── */
+.rl-topbar {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; gap: var(--rl-topbar-gap);
+  height: var(--rl-topbar-h); padding: var(--rl-topbar-pad);
+  border-bottom: 1px solid var(--rl-divider);
+  background: var(--rl-canvas);
+  font-size: var(--rl-ui-size); color: var(--rl-fg-muted);
+}
+.rl-topbar .rl-file { color: var(--rl-fg); font-weight: 500; }
+.rl-topbar .rl-spacer { flex: 1; }
+.rl-topbar .rl-count { font-variant-numeric: tabular-nums; }
+.rl-topbar .rl-sep { width: 1px; height: 16px; background: var(--rl-divider); }
+.rl-iconbtn {
+  width: var(--rl-iconbtn-size); height: var(--rl-iconbtn-size);
+  border: 0; border-radius: var(--rl-iconbtn-radius); background: transparent; padding: 0;
+  color: var(--rl-fg-muted); display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background var(--rl-transition), color var(--rl-transition);
+}
+.rl-iconbtn:hover { background: var(--rl-sunk); color: var(--rl-fg); }
+.rl-iconbtn svg { width: var(--rl-icon-size); height: var(--rl-icon-size); }
+
+/* Save in the card's edit mode — the only accented button */
+.rl-cardbtn.is-primary { color: var(--rl-fg); }
+.rl-cardbtn.is-primary { background: var(--rl-mark); }
+.rl-cardbtn.is-primary:hover { background: var(--rl-mark-hover); }
+
+/* ── Document + gutter ────────────────────────────────────────── */
+.rl-main {
+  display: flex; align-items: flex-start;
+  max-width: calc(980px + var(--rl-gutter-w));
+  margin: 0 auto; padding: 32px 24px 96px;
+}
+.rl-main .markdown-body {
+  flex: 1 1 auto; min-width: 0;
+  font-size: var(--rl-doc-size); line-height: var(--rl-doc-line);
+}
+.rl-gutter {
+  flex: 0 0 var(--rl-gutter-w); width: var(--rl-gutter-w);
+  position: relative; align-self: stretch;
+}
+
+/* ── Reset of VS Code's default webview styles ───────────────────────
+   VS Code injects its own <style> into every webview:
+     body { padding: 0 20px; color: editor-foreground }
+     code { color: textPreformat-foreground; background: textPreformat-background }
+     blockquote { background: textBlockQuote-background }
+     a, a code { color: textLink }   kbd { … }   a:focus { outline }
+   The GitHub stylesheet does not set all of these (inline code has no color,
+   blockquote has no background), so the editor theme's colours leaked through:
+   a dark quote and orange code in the light theme. Reset them explicitly; in
+   .rl-vscode mode the same properties are set by more specific rules. */
+body.rl { padding: 0; }
+.markdown-body code, .markdown-body tt { color: inherit; }
+.markdown-body a code { color: inherit; }
+.markdown-body blockquote { background: transparent; }
+.markdown-body pre code { color: inherit; background: transparent; }
+
+/* github-markdown-css paints .markdown-body's background itself — ours lives on body */
+.markdown-body { background: transparent !important; }
+
+/* highlight.js: the background comes from github-markdown-css's <pre> */
+.hljs { background: transparent !important; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   Comment layer components — only var(--rl-*)
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Root of the floating UI: button, popover, card. Never blocks the document. */
+.rl-ui { position: fixed; inset: 0; pointer-events: none; z-index: 20; }
+.rl-ui > * { pointer-events: auto; }
+
+/* ── Anchor highlight ─────────────────────────────────────────── */
+.rl-mark {
+  background: var(--rl-mark);
+  box-shadow: inset 0 calc(-1 * var(--rl-mark-underline)) 0 0 var(--rl-mark-line);
+  border-radius: var(--rl-mark-radius);
+  cursor: pointer;
+  transition: background var(--rl-transition);
+}
+.rl-mark:hover { background: var(--rl-mark-hover); }
+.rl-mark .rl-mark { background: var(--rl-mark-overlap); }
+.rl-mark:focus-visible { outline: 2px solid var(--rl-accent); outline-offset: 1px; }
+
+/* ── Gutter chip ──────────────────────────────────────────────── */
+.rl-chip {
+  position: absolute; left: 6px;
+  display: inline-flex; align-items: center; gap: var(--rl-chip-gap);
+  height: var(--rl-chip-h); padding: var(--rl-chip-pad);
+  border: 1px solid transparent; border-radius: var(--rl-chip-radius);
+  background: var(--rl-sunk); color: var(--rl-fg-muted);
+  font-family: var(--rl-font); font-size: var(--rl-meta-size); font-weight: 500;
+  font-variant-numeric: tabular-nums; white-space: nowrap; cursor: pointer;
+  transition: background var(--rl-transition), color var(--rl-transition);
+}
+.rl-chip:hover { background: var(--rl-sunk-hover); }
+.rl-chip svg { display: block; width: var(--rl-chip-icon); height: var(--rl-chip-icon); }
+.rl-chip.is-active { background: var(--rl-mark); color: var(--rl-fg); }
+.rl-chip.is-orphan { background: transparent; border: var(--rl-dash) var(--rl-border); color: var(--rl-fg-subtle); }
+
+/* ── Add comment button ───────────────────────────────────────── */
+.rl-addbtn {
+  position: fixed;
+  display: inline-flex; align-items: center; gap: var(--rl-addbtn-gap);
+  height: var(--rl-addbtn-h); padding: var(--rl-addbtn-pad);
+  border-radius: var(--rl-addbtn-radius);
+  background: var(--rl-surface); border: 1px solid var(--rl-surface-border);
+  box-shadow: var(--rl-shadow-pop); color: var(--rl-fg);
+  font-family: var(--rl-font); font-size: var(--rl-ui-size); font-weight: 500;
+  white-space: nowrap; cursor: pointer;
+  transition: background var(--rl-transition);
+}
+.rl-addbtn:hover { background: var(--rl-sunk-hover); }
+.rl-addbtn:active { transform: translateY(.5px); }
+
+/* ── Input popover ────────────────────────────────────────────── */
+.rl-popover {
+  position: fixed;
+  width: var(--rl-popover-w); max-width: calc(100vw - 16px);
+  background: var(--rl-surface); border: 1px solid var(--rl-surface-border);
+  border-radius: var(--rl-popover-radius); box-shadow: var(--rl-shadow-pop);
+  padding: var(--rl-popover-pad);
+  display: flex; align-items: flex-end; gap: 8px;
+}
+.rl-field {
+  flex: 1; min-width: 0; margin: 0; padding: 4px 0;
+  border: 0; outline: 0; background: transparent; resize: none;
+  font-family: var(--rl-font); font-size: var(--rl-text-size); line-height: 1.45; color: var(--rl-fg);
+}
+.rl-field::placeholder { color: var(--rl-fg-subtle); }
+.rl-send {
+  flex: 0 0 auto; width: var(--rl-send-size); height: var(--rl-send-size);
+  border-radius: 50%; border: 0; padding: 0;
+  background: var(--rl-surface-border); color: var(--rl-canvas);
+  display: inline-flex; align-items: center; justify-content: center; cursor: default;
+  transition: background var(--rl-transition);
+}
+.rl-send.is-ready { background: var(--rl-accent); color: var(--rl-accent-fg); cursor: pointer; }
+
+/* ── Blocked remote image (redline.allowRemoteImages = false) ─── */
+.rl-img-blocked {
+  display: inline-block; padding: 2px 8px; border-radius: 6px;
+  border: var(--rl-dash) var(--rl-border); color: var(--rl-fg-subtle);
+  font-size: var(--rl-meta-size); font-family: var(--rl-font); vertical-align: middle;
+}
+
+/* ── Reading card ─────────────────────────────────────────────── */
+.rl-overlay {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .rl-overlay .rl-card { animation: rl-pop .14s ease-out; }
+  @keyframes rl-pop { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
+}
+.rl-card {
+  width: var(--rl-card-w); max-width: 100%; max-height: calc(100vh - 40px);
+  display: flex; flex-direction: column; padding: var(--rl-card-pad-y) 0;
+  overflow-y: auto;
+  background: var(--rl-surface); border: 1px solid var(--rl-surface-border);
+  border-radius: var(--rl-card-radius); box-shadow: var(--rl-shadow-card);
+  overflow: hidden; font-family: var(--rl-font);
+}
+.rl-card-body {
+  padding: 0 var(--rl-card-pad-x) var(--rl-card-gap);
+  display: flex; flex-direction: column; gap: var(--rl-card-gap);
+}
+/* A section = body + its own buttons, no dividers. One rhythm for a single card and a
+   stack: time → quote → text → buttons at --rl-card-gap; between stacked sections —
+   --rl-stack-gap of air, several times more. */
+.rl-card-section { overflow: hidden; flex: 0 0 auto; }
+.rl-card.is-stack .rl-card-section + .rl-card-section { margin-top: var(--rl-stack-gap); }
+
+/* ── Deletion animation ───────────────────────────────────────── */
+.rl-card-section { transition: max-height .22s ease, opacity .16s ease, margin-top .22s ease; }
+.rl-card-section.is-leaving { max-height: 0 !important; opacity: 0; margin-top: 0 !important; }
+.rl-card.is-leaving { animation: rl-card-out .18s ease-in forwards; pointer-events: none; }
+@keyframes rl-card-out { to { opacity: 0; transform: scale(.96) translateY(6px); } }
+.rl-mark { transition: background .2s ease, box-shadow .2s ease; }
+.rl-mark.is-leaving { background: transparent !important; box-shadow: none !important; }
+.rl-chip { transition: background var(--rl-transition), color var(--rl-transition), opacity .2s ease, transform .2s ease; }
+.rl-chip.is-leaving { opacity: 0; transform: scale(.8); }
+@media (prefers-reduced-motion: reduce) {
+  .rl-card-section, .rl-card.is-leaving, .rl-mark, .rl-chip { transition: none; animation: none; }
+}
+.rl-card-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.rl-time { font-size: var(--rl-meta-size); color: var(--rl-fg-subtle); }
+.rl-index { font-family: var(--rl-font-mono); font-size: 11px; color: var(--rl-fg-subtle); font-variant-numeric: tabular-nums; }
+.rl-quote {
+  border-left: var(--rl-quote-bar) solid var(--rl-mark-line); padding-left: var(--rl-quote-gap);
+  font-size: var(--rl-quote-size); line-height: 1.45; color: var(--rl-fg-muted); white-space: pre-wrap;
+}
+.rl-quote.is-orphan { border-left-color: var(--rl-border); font-style: italic; }
+.rl-text { font-size: var(--rl-text-size); line-height: var(--rl-text-line); color: var(--rl-fg); white-space: pre-wrap; }
+.rl-field-edit { width: 100%; padding: 0; line-height: var(--rl-text-line); }
+.rl-card-foot { display: flex; gap: 6px; padding: var(--rl-card-foot-pad); }
+.rl-cardbtn {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 0; background: transparent; cursor: pointer; font-family: inherit;
+  font-size: var(--rl-ui-size); font-weight: 500; color: var(--rl-fg-muted);
+  padding: 5px 9px; border-radius: var(--rl-iconbtn-radius);
+  background: var(--rl-btn-bg);
+  transition: background var(--rl-transition), color var(--rl-transition);
+}
+.rl-cardbtn:hover { background: var(--rl-btn-bg-hover); color: var(--rl-fg); }
+.rl-cardbtn.is-danger:hover { color: var(--rl-danger); }

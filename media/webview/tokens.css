@@ -1,0 +1,189 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   Redline — design tokens
+   ───────────────────────────────────────────────────────────────────────
+   The single place where every UI value lives.
+   Components carry no literals — only var(--rl-*).
+
+   Usage: the webview's <body> gets the class `rl` plus one look class
+   (`rl-light`, `rl-dark`, `rl-dark-dimmed`, …) from the redline.theme
+   setting and the active VS Code theme kind; `rl-vscode` on top in the
+   "VS Code theme" mode. Switching = one class change, no re-render.
+
+   Geometry is declared once in .rl and never duplicated.
+   Dark looks override ONLY colours.
+
+   Every value is a design decision; change it here, not in components.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.rl{
+  /* ── Typography ──────────────────────────────────────────────────── */
+  --rl-font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  --rl-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  --rl-text-size: 14px;           /* comment body                      */
+  --rl-text-line: 1.5;
+  --rl-quote-size: 13px;          /* anchor quote                      */
+  --rl-meta-size: 12px;           /* time, chip count                  */
+  --rl-ui-size: 12.5px;           /* buttons, header                   */
+  --rl-doc-size: 16px;            /* the markdown document             */
+  --rl-doc-line: 1.5;
+
+  /* ── Geometry ────────────────────────────────────────────────────── */
+  --rl-gutter-w: 40px;            /* gutter width                      */
+
+  --rl-chip-h: 22px;
+  --rl-chip-radius: 6px;
+  --rl-chip-pad: 0 7px 0 6px;
+  --rl-chip-gap: 5px;
+  --rl-chip-icon: 14px;
+
+  --rl-addbtn-h: 28px;
+  --rl-addbtn-radius: 8px;
+  --rl-addbtn-pad: 0 11px 0 9px;
+  --rl-addbtn-gap: 6px;
+  --rl-addbtn-offset: 8px;        /* from the mouse-release point      */
+
+  --rl-popover-w: 272px;
+  --rl-popover-radius: 12px;
+  --rl-popover-pad: 9px 10px 9px 12px;
+  --rl-send-size: 26px;
+
+  --rl-card-w: 400px;
+  --rl-card-radius: 12px;
+  --rl-card-pad-y: 14px;          /* card top and bottom — equal          */
+  --rl-card-pad-x: 16px;          /* section side padding                 */
+  --rl-card-gap: 9px;             /* time → quote → text → buttons        */
+  --rl-card-foot-pad: 0 8px;      /* 8px = 16 − the button's own padding  */
+  --rl-stack-gap: 22px;           /* exactly the gap between stacked sections */
+  --rl-stack-foot-gap: var(--rl-card-gap); /* text → buttons = quote → text */
+
+  --rl-quote-bar: 2px;
+  --rl-quote-gap: 10px;
+  --rl-mark-underline: 2px;       /* 0 — remove the anchor underline   */
+  --rl-mark-radius: 1px;
+
+  --rl-topbar-h: 38px;
+  --rl-topbar-pad: 0 12px;
+  --rl-topbar-gap: 12px;
+  --rl-iconbtn-size: 26px;
+  --rl-iconbtn-radius: 6px;
+  --rl-icon-size: 15px;
+
+  --rl-transition: .12s ease;
+  --rl-dash: 1px dashed;
+
+  /* ── Colour · LIGHT (base, fully defined) ────────────────────────── */
+  --rl-canvas:       #ffffff;
+  --rl-fg:           #1f2328;
+  --rl-fg-muted:     #59636e;
+  --rl-fg-subtle:    #818b98;
+  --rl-border:       #d1d9e0;
+  --rl-border-soft:  #e4e8ec;
+  --rl-divider:      #f0f3f6;
+  --rl-sunk:         #f6f8fa;
+  --rl-sunk-hover:   #eaeef2;
+  --rl-link:         #0969da;
+  --rl-danger:       #cf222e;
+
+  /* Floating elements — button, popover, card: their own surface + outline */
+  --rl-surface:        #ffffff;
+  --rl-surface-border: #d1d9e0;
+
+  /* Card buttons — Edit / Delete / Save: a soft fill, half a step off the surface */
+  --rl-btn-bg:         #f3f5f7;
+  --rl-btn-bg-hover:   #e6e9ed;
+
+  --rl-accent:       #d99100;     /* the active send button            */
+  --rl-accent-fg:    #ffffff;
+
+  --rl-mark:         #fff8c5;
+  --rl-mark-hover:   #ffec9e;
+  --rl-mark-overlap: #ffe08a;
+  --rl-mark-line:    #e3ae3a;
+
+  --rl-shadow-pop:  0 2px 8px rgba(31,35,40,.12), 0 0 0 1px rgba(31,35,40,.06);
+  --rl-shadow-card: 0 12px 32px rgba(31,35,40,.16), 0 2px 6px rgba(31,35,40,.06);
+}
+
+/* ── Colour · DARK — ONLY colours are overridden ─────────────────── */
+/* Every dark GitHub look inherits this set; specific overrides follow. */
+.rl-dark,
+.rl-dark-dimmed,
+.rl-dark-high-contrast,
+.rl-dark-colorblind{
+  --rl-canvas:       #0d1117;
+  --rl-fg:           #e6edf3;
+  --rl-fg-muted:     #9198a1;
+  --rl-fg-subtle:    #6e7681;
+  --rl-border:       #3d444d;
+  --rl-border-soft:  #21262d;
+  --rl-divider:      #21262d;
+  --rl-sunk:         #161b22;
+  --rl-sunk-hover:   #21262d;
+  --rl-link:         #4493f8;
+  --rl-danger:       #ff7b72;
+
+  --rl-surface:        #161b22;
+  --rl-surface-border: #3d444d;
+  --rl-btn-bg:         #21262d;
+  --rl-btn-bg-hover:   #2a313a;
+
+  --rl-accent:       #e0a63c;
+  --rl-accent-fg:    #16140f;
+
+  --rl-mark:         rgba(224,166,60,.22);
+  --rl-mark-hover:   rgba(224,166,60,.32);
+  --rl-mark-overlap: rgba(224,166,60,.40);
+  --rl-mark-line:    rgba(224,166,60,.75);
+
+  --rl-shadow-pop:  0 6px 20px rgba(1,4,9,.75), 0 0 0 1px rgba(255,255,255,.08);
+  --rl-shadow-card: 0 16px 40px rgba(1,4,9,.8), 0 2px 8px rgba(1,4,9,.5), 0 0 0 1px rgba(255,255,255,.06);
+}
+
+/* Dark dimmed — GitHub's muted grey-blue, closest to One Dark Pro */
+.rl-dark-dimmed{
+  --rl-canvas:       #212830;
+  --rl-fg:           #f0f6fc;
+  --rl-fg-muted:     #9198a1;
+  --rl-fg-subtle:    #767f8c;
+  --rl-border:       #3d444d;
+  --rl-border-soft:  #2a313c;
+  --rl-divider:      #2a313c;
+  --rl-sunk:         #262c36;
+  --rl-sunk-hover:   #373e47;
+  --rl-surface:        #2d333b;
+  --rl-surface-border: #444c56;
+  --rl-btn-bg:         #373e47;
+  --rl-btn-bg-hover:   #444c56;
+  --rl-shadow-pop:  0 6px 20px rgba(1,4,9,.55), 0 0 0 1px rgba(255,255,255,.08);
+  --rl-shadow-card: 0 16px 40px rgba(1,4,9,.65), 0 2px 8px rgba(1,4,9,.4), 0 0 0 1px rgba(255,255,255,.06);
+}
+
+/* Dark high contrast — black canvas, bright borders */
+.rl-dark-high-contrast{
+  --rl-canvas:       #010409;
+  --rl-fg:           #ffffff;
+  --rl-fg-muted:     #f0f3f6;
+  --rl-fg-subtle:    #9ea7b3;
+  --rl-border:       #7a828e;
+  --rl-border-soft:  #3d444d;
+  --rl-divider:      #3d444d;
+  --rl-sunk:         #0a0c10;
+  --rl-sunk-hover:   #161b22;
+  --rl-link:         #71b7ff;
+  --rl-surface:        #0a0c10;
+  --rl-surface-border: #7a828e;
+  --rl-btn-bg:         #161b22;
+  --rl-btn-bg-hover:   #21262d;
+}
+
+/* Colorblind — same geometry and canvas; the document palette differs inside github-markdown-css */
+.rl-light-colorblind{ --rl-link: #0969da; }
+.rl-dark-colorblind{ --rl-link: #4493f8; }
+
+.rl{ background: var(--rl-canvas); color: var(--rl-fg); }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   UI strings, for reference:
+     Add comment · Add a comment… · Edit · Delete · Save
+     1 comment / N comments · text changed · Export · Theme
+   ═══════════════════════════════════════════════════════════════════════ */

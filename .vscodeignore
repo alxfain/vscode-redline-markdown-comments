@@ -1,0 +1,16 @@
+.vscode/**
+docs/**
+.git/**
+.gitignore
+node_modules/**
+src/**
+test/**
+media/webview/**
+!media/icons/**
+out/**/*.map
+media/*.map
+esbuild.mjs
+tsconfig.json
+vitest.config.ts
+package-lock.json
+*.vsix
