@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { placeButton } from "../media/webview/geometry.js";
+import { clampToBox, placeButton } from "../media/webview/geometry.js";
 
 const caret = { left: 400, top: 200, right: 402, bottom: 220, width: 2, height: 20 };
 const button = { width: 120, height: 28 };
@@ -28,5 +28,31 @@ describe("placeButton (D27)", () => {
     const atBottom = { ...caret, top: 790, bottom: 810 };
     const { top } = placeButton(atBottom, "forward", button, viewport);
     expect(top + button.height).toBeLessThanOrEqual(viewport.height);
+  });
+});
+
+describe("clampToBox (D79): a caret past the edge of a scrolling code block", () => {
+  const box = { left: 100, top: 50, right: 500, bottom: 250, width: 400, height: 200 };
+
+  test("a caret scrolled out to the right is pulled back to the block's right edge", () => {
+    const out = { left: 640, top: 120, right: 642, bottom: 140, width: 2, height: 20 };
+    const clamped = clampToBox(out, box);
+
+    expect(clamped.left).toBe(500);
+    expect(clamped.right).toBe(500);
+    expect(clamped.top).toBe(120);
+    expect(clamped.width).toBe(0);
+  });
+
+  test("a caret scrolled out to the left is pulled to the block's left edge", () => {
+    const out = { left: 20, top: 120, right: 22, bottom: 140, width: 2, height: 20 };
+
+    expect(clampToBox(out, box).left).toBe(100);
+  });
+
+  test("a caret inside the box is returned unchanged", () => {
+    const inside = { left: 300, top: 120, right: 302, bottom: 140, width: 2, height: 20 };
+
+    expect(clampToBox(inside, box)).toEqual(inside);
   });
 });

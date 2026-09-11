@@ -41,3 +41,18 @@ export function placeButton(
 
   return { left, top };
 }
+
+/**
+ * Pushes a caret inside a block's box.
+ *
+ * A wide code block scrolls horizontally, and the selection's focus can sit
+ * past the visible edge; the button must still land on the block, not over
+ * whatever is beside it (D79).
+ */
+export function clampToBox(caret: Rect, box: Rect): Rect {
+  const left = Math.min(Math.max(caret.left, box.left), box.right);
+  const right = Math.min(Math.max(caret.right, box.left), box.right);
+  const top = Math.min(Math.max(caret.top, box.top), box.bottom);
+  const bottom = Math.min(Math.max(caret.bottom, box.top), box.bottom);
+  return { left, top, right, bottom, width: right - left, height: bottom - top };
+}
