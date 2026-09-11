@@ -3,6 +3,14 @@
 All notable changes to Redline are documented here. Versions follow [semantic
 versioning](https://semver.org); dates are ISO.
 
+## 0.3.1 — 2026-09-11
+
+- The preview button and `Cmd+Alt+M` now appear on every `.md` file. VS Code 1.137
+  gives some Markdown files a language id of their own — `SKILL.md` is `skill`,
+  `*.prompt.md` is `prompt`, `*.instructions.md` and files under `.claude/rules/`
+  are `instructions` — and both were gated on the language being `markdown`. They
+  are gated on the `.md` extension now, the same rule the editor itself uses.
+
 ## 0.3.0 — 2026-09-11
 
 Comments inside fenced code blocks.
