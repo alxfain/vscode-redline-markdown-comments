@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, test } from "vitest";
 
 /**
@@ -8,7 +9,8 @@ import { describe, expect, test } from "vitest";
  * The custom editor is registered for `*.md`, so the button and the shortcut
  * must be gated on the extension too — never on `resourceLangId` (D80).
  */
-const pkg = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8")) as {
+// Vitest runs from the repository root, where package.json lives.
+const pkg = JSON.parse(readFileSync(resolve("package.json"), "utf8")) as {
   contributes: {
     menus: Record<string, Array<{ command: string; when: string }>>;
     keybindings: Array<{ command: string; when: string }>;
