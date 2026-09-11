@@ -18,7 +18,7 @@ Built for the loop **agent writes → you review → agent fixes**.
 
 4. Ask your agent: *"Address every `<!-- MC: -->` comment in `docs/spec.md` in place and remove the tags you've handled."* Watch the highlights disappear as it works — the preview updates live.
 
-The tag sits at the end of the line it refers to. It never breaks rendering on GitHub, in VS Code, or in Notion, and the file stays the single source of truth — no sidecar files, no database.
+The tag sits at the end of the line it refers to. Inside a fenced code block it sits at the end of the block's opening fence line, after the language name — every renderer treats that as part of the info string and shows nothing, and the code itself is never touched. It never breaks rendering on GitHub, in VS Code, or in Notion, and the file stays the single source of truth — no sidecar files, no database.
 
 ## Features
 
@@ -73,7 +73,7 @@ On Windows and Linux use `Ctrl` instead of `Cmd`.
 
 ## Notes
 
-- Comments inside fenced code blocks are not supported — a tag has nowhere to live inside a fence.
+- Comments work inside fenced code blocks (```` ``` ```` or `~~~`); the tag goes on the opening fence line. Indented code blocks (four spaces, no fence) are not supported — there is no fence line for the tag to live on, and the preview says so when you select text in one.
 - **Opening a document makes no network requests.** Images from `https://` URLs are replaced with a placeholder until you enable `redline.allowRemoteImages` — a Markdown file from an untrusted source must not be able to phone home. Exports follow the same setting: with remote images off, the exported HTML carries no remote image URLs and its CSP allows none.
 - The preview can load local images only from the document's own folder and the extension's assets; the webview has no access to the rest of the workspace. Raw HTML in a document is sanitised with DOMPurify before it reaches the DOM, and the webview runs under a nonce-based Content-Security-Policy on top of that.
 - Export inlines only image files from the document's folder or the open workspace, after resolving symlinks and `..`; a document cannot make the exporter read anything else, and `file:` links from the document never reach the exported file. The exported HTML carries its own CSP that forbids scripts entirely.

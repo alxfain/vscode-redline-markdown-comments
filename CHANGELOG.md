@@ -3,6 +3,25 @@
 All notable changes to Redline are documented here. Versions follow [semantic
 versioning](https://semver.org); dates are ISO.
 
+## 0.3.0 — 2026-09-11
+
+Comments inside fenced code blocks.
+
+- Select text inside a ```` ``` ```` or `~~~` block and the "Add comment" button
+  appears as anywhere else. The tag is written at the end of the block's opening
+  fence line, after the language name: renderers treat it as part of the info
+  string and show nothing, the code inside the block is never touched, and the
+  file keeps the same number of lines.
+- Several comments on one block share a chip with a count and stack in one card;
+  the card's quote keeps the code's spacing, so a table row still reads as a row.
+- A selection that starts in one block and ends in another no longer creates a
+  comment that would orphan on the next render — the button simply does not appear.
+- Selecting inside an indented code block (four spaces, no fence) now shows a
+  short explanation instead of nothing: such a block has no fence line for a tag.
+- Backticks inside a comment or its anchor are written into the tag as `\u0060`
+  and read back unchanged. On a fence line a literal backtick is invalid
+  CommonMark and would turn the block into a paragraph.
+
 ## 0.2.0 — 2026-09-10
 
 First release on the Visual Studio Marketplace.
