@@ -113,3 +113,37 @@ describe("insertComment on a fenced block (D79)", () => {
     expect(() => insertComment(DOC, { line: 6, anchor: "x", comment: "y", date: DATE })).toThrow(/code block/);
   });
 });
+
+describe("backticks in a tag are written as \\u0060 (D79)", () => {
+  test("on a fence line, so the info string stays valid CommonMark", () => {
+    const { text } = insertComment(DOC, { line: 3, anchor: "| sell |", comment: "check `gas` here", date: DATE });
+    const fenceLine = text.split("\n")[2] as string;
+
+    // The only backticks on the line are the three of the fence itself.
+    expect(fenceLine.slice(3)).not.toContain("`");
+    expect(fenceLine).toContain("check \\u0060gas\\u0060 here");
+    expect(parseComments(text)[0]?.comment).toBe("check `gas` here");
+  });
+
+  test("in the anchor as well", () => {
+    const { text } = insertComment(DOC, { line: 3, anchor: "`x` = 1", comment: "why", date: DATE });
+
+    expect((text.split("\n")[2] as string).slice(3)).not.toContain("`");
+    expect(parseComments(text)[0]?.anchor).toBe("`x` = 1");
+  });
+
+  test("on an ordinary line too — one rule, no exceptions", () => {
+    const { text } = insertComment(DOC, { line: 1, anchor: "Trades", comment: "use `code`", date: DATE });
+
+    expect(text.split("\n")[0]).toContain("use \\u0060code\\u0060");
+    expect(parseComments(text)[0]?.comment).toBe("use `code`");
+  });
+
+  test("survives an update", () => {
+    const { text } = insertComment(DOC, { line: 3, anchor: "| sell |", comment: "first", date: DATE });
+    const next = updateComment(text, "c1", "now `second`");
+
+    expect((next.split("\n")[2] as string).slice(3)).not.toContain("`");
+    expect(parseComments(next)[0]?.comment).toBe("now `second`");
+  });
+});

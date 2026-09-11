@@ -98,3 +98,21 @@ describe("renderMarkdown: raw HTML cannot forge the source mapping", () => {
     expect(html).toContain("<div>late</div>");
   });
 });
+
+describe("renderMarkdown: a tag on the fence line (D79)", () => {
+  test("a fence-line tag with an escaped backtick does not break the block", () => {
+    const tag = '<!-- MC:{"id":"c1","anchor":"x","comment":"check \\u0060gas\\u0060","line":1,"date":"2026-09-11T10:00:00Z"} -->';
+    const html = render(["``` " + tag, "| sell | 0.240 |", "```"].join("\n"));
+
+    expect(html).toMatch(/^<pre/);
+    expect(html).not.toContain("<p ");
+    expect(html).not.toContain("MC:");
+  });
+
+  test("a literal backtick in the info string would break it — the reason for the escape", () => {
+    const html = render(["``` <!-- MC:{\"comment\":\"check `gas`\"} -->", "| sell | 0.240 |", "```"].join("\n"));
+
+    expect(html).toMatch(/^<p /);
+    expect(html).toContain("MC:");
+  });
+});

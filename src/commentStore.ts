@@ -249,8 +249,15 @@ export interface NewComment {
  *
  * `-->` inside any string field would close the tag early and break the
  * file; so would `--!>`, which HTML parsers also accept as a comment end.
- * Both are written with the JSON escape `\u003e` for the `>`, and
- * `JSON.parse` turns them back.
+ * Both are written with the JSON escape `\u003e` for the `>`.
+ *
+ * A backtick is written as `\u0060`: on an opening fence line the tag is
+ * part of the info string, and CommonMark forbids a backtick there — one
+ * literal backtick turns the whole block into a paragraph. Escaping it in
+ * every tag, not only on fence lines, keeps one rule and lets
+ * `updateComment` stay ignorant of where a tag lives (D79).
+ *
+ * `JSON.parse` turns all three back.
  */
 function serialize(comment: Comment): string {
   const json = JSON.stringify({
@@ -261,7 +268,8 @@ function serialize(comment: Comment): string {
     date: comment.date,
   })
     .replaceAll("-->", "--\\u003e")
-    .replaceAll("--!>", "--!\\u003e");
+    .replaceAll("--!>", "--!\\u003e")
+    .replaceAll("`", "\\u0060");
 
   return `<!-- MC:${json} -->`;
 }
