@@ -31,8 +31,11 @@ describe("audit: a comment can never land where the parser will not see it", () 
     expect(() => insertComment(DOC, { line: 5, anchor: "x", comment: "would vanish", date: DATE })).toThrow(/code block/);
   });
 
-  test("refuses to insert on the fence line itself", () => {
-    expect(() => insertComment(DOC, { line: 4, anchor: "x", comment: "would vanish", date: DATE })).toThrow(/code block/);
+  test("accepts the opening fence line: the tag lives in its tail (D79)", () => {
+    const { text } = insertComment(DOC, { line: 4, anchor: "const x", comment: "ok", date: DATE });
+
+    expect(text.split("\n")[3]).toMatch(/^```ts <!-- MC:/);
+    expect(parseComments(text)[0]?.line).toBe(4);
   });
 
   test("still inserts on the first line after the block closes", () => {

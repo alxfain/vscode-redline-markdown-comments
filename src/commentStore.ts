@@ -7,8 +7,11 @@
  * Storage format:
  *   line text <!-- MC:{"id","anchor","comment","line","date"} -->
  *
- * The tag sits at the end of the line it refers to. The `line` field is
- * a hint; the real position always comes from where the tag actually is.
+ * The tag sits at the end of the line it refers to. For a fragment inside a
+ * fenced code block that line is the block's opening fence — the tail of the
+ * fence line, after the info string, is the one place inside a block where a
+ * tag is markup rather than code. The `line` field is a hint; the real
+ * position always comes from where the tag actually is.
  */
 
 export interface Comment {
@@ -61,7 +64,9 @@ function codeRanges(text: string): CodeRange[] {
     }
 
     if (marker) {
-      fence = { char: marker[0] as string, len: marker.length, start: lineStart };
+      // The range starts at the end of the opening line: its tail (the info
+      // string and anything after it) is markup, so a tag can live there (D79).
+      fence = { char: marker[0] as string, len: marker.length, start: lineEnd };
       continue;
     }
 
@@ -124,7 +129,8 @@ const CLOSE = "-->";
  * the line, and both the line end and the closer position are cached so
  * neither is searched for twice.
  *
- * Tags inside code blocks are ignored. A tag with broken JSON is skipped —
+ * Tags inside code blocks are ignored — from the end of the opening fence line
+ * to the end of the closing one, and inside inline code. A tag with broken JSON is skipped —
  * and the file is left alone: the user's data matters more than our parser.
  * After a broken tag the scan resumes right after its opener, so a real tag
  * hiding behind garbage on the same line is still found.
@@ -285,7 +291,8 @@ export function insertComment(text: string, input: NewComment): { text: string; 
     throw new RangeError(`Line ${input.line} is outside a document of ${lines.length} lines`);
   }
 
-  // The parser would never see a tag inside a fence — the comment would vanish silently.
+  // Below the opening fence line the parser would never see the tag — the
+  // comment would vanish silently. The opening line itself is allowed (D79).
   const lineStart = lines.slice(0, index).reduce((sum, line) => sum + line.length + 1, 0);
   const fenced = codeRanges(text).some(
     (range) => range.kind === "fence" && lineStart >= range.from && lineStart <= range.to,
