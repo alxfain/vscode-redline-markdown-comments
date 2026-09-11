@@ -19,6 +19,19 @@ describe("renderMarkdown: source mapping", () => {
 
     expect(html).toContain('<pre data-line="3"');
   });
+
+  test("marks a fenced block as a fence, so the selection guard can tell it apart (D79)", () => {
+    const html = render(["text", "", "```", "| a | b |", "```"].join("\n"));
+
+    expect(html).toContain('<pre data-line="3" data-fence=""');
+  });
+
+  test("an indented code block is neither stamped nor marked as a fence", () => {
+    const html = render(["text", "", "    indented code"].join("\n"));
+
+    expect(html).toContain("<pre><code>");
+    expect(html).not.toContain("data-fence");
+  });
 });
 
 describe("renderMarkdown: GFM", () => {
@@ -88,6 +101,13 @@ describe("renderMarkdown: raw HTML", () => {
 });
 
 describe("renderMarkdown: raw HTML cannot forge the source mapping", () => {
+  test("data-fence written by the author is dropped too, so a raw <pre> cannot pose as a fenced block (D79)", () => {
+    const html = render('<pre data-fence="" data-line="3"><code>fake</code></pre>');
+
+    expect(html).not.toContain("data-fence");
+    expect(html).not.toContain("data-line");
+  });
+
   test("data-line and data-id written by the author are dropped, the renderer's own stamps stay", () => {
     const html = render(['<div data-line="9999" data-id="c1">late</div>', "", "a <span data-line=5 DATA-ID='c2'>b</span> c"].join("\n"));
 

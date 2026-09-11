@@ -53,22 +53,25 @@ md.renderer.renderToken = function (tokens: Token[], idx: number, options: Rende
 };
 
 // Fences render through their own rule, bypassing renderToken.
+// `data-fence` tells the selection guard this <pre> has an opening fence
+// line for a tag to live on; an indented code block has none (D79).
 const fence = md.renderer.rules["fence"] as Rule;
 md.renderer.rules["fence"] = (tokens, idx, options, env, self) => {
   const html = fence(tokens, idx, options, env, self);
   const token = tokens[idx];
-  return token && token.map ? html.replace(/^<pre/, `<pre data-line="${token.map[0] + 1}"`) : html;
+  return token && token.map ? html.replace(/^<pre/, `<pre data-line="${token.map[0] + 1}" data-fence=""`) : html;
 };
 
 /* ── raw HTML cannot forge the source mapping ─────────────────────── */
 
 /**
- * `data-line` / `data-id` are how comments find their block and highlight.
+ * `data-line` / `data-id` are how comments find their block and highlight;
+ * `data-fence` is how the selection guard recognises a fenced block (D79).
  * The renderer stamps them on the blocks it creates; an author's raw HTML
  * must not carry its own, or a comment could be steered onto any line.
  * Raw HTML reaches the output only through these two token types.
  */
-const MAPPING_ATTR = /\s+data-(?:line|id)(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+))?/gi;
+const MAPPING_ATTR = /\s+data-(?:line|id|fence)(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+))?/gi;
 
 for (const type of ["html_block", "html_inline"] as const) {
   const rule = md.renderer.rules[type] as Rule;
