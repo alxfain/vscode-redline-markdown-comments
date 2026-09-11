@@ -165,9 +165,10 @@ function reportViewport(): void {
 doc.addEventListener("mouseup", () => {
   // The selection settles after mouseup — read it on the next tick.
   setTimeout(() => {
-    const info = captureSelection(doc);
-    if (info) layer.showAddButton(info);
-    else layer.hideAddButton();
+    const result = captureSelection(doc);
+    if (!result) layer.hideAddButton();
+    else if (result.kind === "ok") layer.showAddButton(result.info);
+    else layer.showHint(result.blocked);
   }, 0);
 });
 

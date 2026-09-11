@@ -12,9 +12,9 @@
 
 import type { Comment } from "../../src/commentStore.js";
 import { findAnchor, wrapTextRange } from "./anchors.js";
-import { placeButton } from "./geometry.js";
+import { placeButton, type Direction } from "./geometry.js";
 import { ICON } from "./icons.js";
-import type { SelectionInfo } from "./selection.js";
+import type { BlockedSelection, SelectionInfo } from "./selection.js";
 import { relativeTime } from "./time.js";
 
 export interface CommentHost {
@@ -61,6 +61,7 @@ export class CommentLayer {
   private placed: Placed[] = [];
   private readonly ui: HTMLElement;
   private addButton: HTMLElement | null = null;
+  private hint: HTMLElement | null = null;
   private popover: HTMLElement | null = null;
   private overlay: HTMLElement | null = null;
   private pending: SelectionInfo | null = null;
@@ -177,9 +178,23 @@ export class CommentLayer {
     this.position(button, info);
   }
 
+  /** No button here, and a reason why — silence looks like a bug (D79). */
+  showHint(blocked: BlockedSelection): void {
+    this.hideAddButton();
+
+    const hint = el("div", "rl-hint");
+    hint.setAttribute("role", "status");
+    text(hint, "Comments need a fenced code block. This one is indented — a tag would show up as code.");
+    this.ui.appendChild(hint);
+    this.hint = hint;
+    this.position(hint, blocked);
+  }
+
   hideAddButton(): void {
     this.addButton?.remove();
     this.addButton = null;
+    this.hint?.remove();
+    this.hint = null;
     if (!this.popover) this.pending = null;
   }
 
@@ -233,11 +248,11 @@ export class CommentLayer {
     this.pending = null;
   }
 
-  private position(node: HTMLElement, info: SelectionInfo): void {
+  private position(node: HTMLElement, at: { caret: DOMRect; direction: Direction }): void {
     const size = node.getBoundingClientRect();
     const { left, top } = placeButton(
-      info.caret,
-      info.direction,
+      at.caret,
+      at.direction,
       { width: size.width, height: size.height },
       { width: window.innerWidth, height: window.innerHeight },
     );

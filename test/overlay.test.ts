@@ -141,3 +141,36 @@ describe("CommentLayer.navigate", () => {
     expect(document.querySelector(".rl-card")).toBeNull();
   });
 });
+
+describe("CommentLayer.showHint (D79): an indented code block explains itself", () => {
+  const blocked = { reason: "indented-code" as const, direction: "forward" as const, caret: new DOMRect(10, 10, 2, 18) };
+
+  test("renders the explanation where the button would be", () => {
+    const layer = new CommentLayer(doc, gutter, host);
+
+    layer.showHint(blocked);
+
+    const hint = document.querySelector(".rl-hint");
+    expect(hint?.textContent).toContain("fenced");
+    expect(document.querySelector(".rl-addbtn")).toBeNull();
+  });
+
+  test("hideAddButton removes it", () => {
+    const layer = new CommentLayer(doc, gutter, host);
+    layer.showHint(blocked);
+
+    layer.hideAddButton();
+
+    expect(document.querySelector(".rl-hint")).toBeNull();
+  });
+
+  test("showing the button afterwards replaces the hint", () => {
+    const layer = new CommentLayer(doc, gutter, host);
+    layer.showHint(blocked);
+
+    layer.showAddButton({ line: 3, anchor: "x", direction: "forward", caret: new DOMRect(10, 10, 2, 18) });
+
+    expect(document.querySelector(".rl-hint")).toBeNull();
+    expect(document.querySelectorAll(".rl-addbtn")).toHaveLength(1);
+  });
+});

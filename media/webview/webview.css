@@ -126,6 +126,18 @@ body.rl { padding: 0; }
 .rl-addbtn:hover { background: var(--rl-sunk-hover); }
 .rl-addbtn:active { transform: translateY(.5px); }
 
+/* ── Hint in place of the button (D79) ────────────────────────── */
+.rl-hint {
+  position: fixed;
+  max-width: var(--rl-popover-w);
+  padding: var(--rl-popover-pad);
+  border-radius: var(--rl-popover-radius);
+  background: var(--rl-surface); border: 1px solid var(--rl-surface-border);
+  box-shadow: var(--rl-shadow-pop); color: var(--rl-fg-muted);
+  font-family: var(--rl-font); font-size: var(--rl-ui-size); line-height: 1.45;
+  pointer-events: none;
+}
+
 /* ── Input popover ────────────────────────────────────────────── */
 .rl-popover {
   position: fixed;
