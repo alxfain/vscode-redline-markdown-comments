@@ -36,7 +36,11 @@ GFM is supported: tables, task lists, strikethrough, autolinks, syntax highlight
 
 ## Install
 
-The extension is not on the Marketplace yet.
+**From the Marketplace:** find **Redline — Markdown Comments** in the Extensions panel, or run
+
+```sh
+code --install-extension alxfain.redline-markdown-comments
+```
 
 **From a release:** download the latest `.vsix` from [Releases](https://github.com/alxfain/vscode-redline-markdown-comments/releases), then in VS Code open the Extensions panel → `⋯` → **Install from VSIX…** — or run `code --install-extension redline-markdown-comments-<version>.vsix`.
 
