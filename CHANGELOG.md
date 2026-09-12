@@ -3,6 +3,14 @@
 All notable changes to Redline are documented here. Versions follow [semantic
 versioning](https://semver.org); dates are ISO.
 
+## 0.3.3 — 2026-09-12
+
+- The package is named `redline-markdown-comments`, so the extension id is
+  `alxfain.redline-markdown-comments`. The Marketplace requires the package name to
+  be unique across all publishers, and `markdown-comments` was already taken.
+  Package files are named `redline-markdown-comments-<version>.vsix`. If an earlier
+  build is installed under another id, uninstall it once.
+
 ## 0.3.2 — 2026-09-12
 
 - The extension is published under the `alxfain` publisher: its id is now

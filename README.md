@@ -38,7 +38,7 @@ GFM is supported: tables, task lists, strikethrough, autolinks, syntax highlight
 
 The extension is not on the Marketplace yet.
 
-**From a release:** download the latest `.vsix` from [Releases](https://github.com/alxfain/vscode-redline-markdown-comments/releases), then in VS Code open the Extensions panel → `⋯` → **Install from VSIX…** — or run `code --install-extension markdown-comments-<version>.vsix`.
+**From a release:** download the latest `.vsix` from [Releases](https://github.com/alxfain/vscode-redline-markdown-comments/releases), then in VS Code open the Extensions panel → `⋯` → **Install from VSIX…** — or run `code --install-extension redline-markdown-comments-<version>.vsix`.
 
 **From source:**
 
@@ -46,7 +46,7 @@ The extension is not on the Marketplace yet.
 npm install
 npm run compile
 npx vsce package --no-dependencies
-code --install-extension markdown-comments-<version>.vsix
+code --install-extension redline-markdown-comments-<version>.vsix
 ```
 
 Then reload the window (`Developer: Reload Window`).

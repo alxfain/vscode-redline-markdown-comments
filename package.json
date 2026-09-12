@@ -1,8 +1,8 @@
 {
-  "name": "markdown-comments",
+  "name": "redline-markdown-comments",
   "displayName": "Redline — Markdown Comments",
   "description": "Comment on Markdown right in VS Code. Comments live inside the .md file, invisible to renderers and readable by any AI agent.",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "license": "MIT",
   "icon": "media/icon.png",
   "galleryBanner": {
