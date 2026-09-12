@@ -3,6 +3,13 @@
 All notable changes to Redline are documented here. Versions follow [semantic
 versioning](https://semver.org); dates are ISO.
 
+## 0.3.2 — 2026-09-12
+
+- The extension is published under the `alxfain` publisher: its id is now
+  `alxfain.markdown-comments`. Nothing else changed. If an earlier build is
+  installed under `redline.markdown-comments`, uninstall it once — VS Code treats
+  the two ids as different extensions and would register the preview twice.
+
 ## 0.3.1 — 2026-09-11
 
 - The preview button and `Cmd+Alt+M` now appear on every `.md` file. VS Code 1.137
