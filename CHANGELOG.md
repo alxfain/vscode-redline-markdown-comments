@@ -3,6 +3,12 @@
 All notable changes to Redline are documented here. Versions follow [semantic
 versioning](https://semver.org); dates are ISO.
 
+## 0.3.5 — 2026-09-12
+
+- The README is rewritten for the Marketplace page: what Redline does, how it
+  works, the feature list, keybindings, settings and a short privacy section.
+  Developer notes moved to `docs/development.md`. No changes to the extension.
+
 ## 0.3.4 — 2026-09-12
 
 - New Marketplace icon: an amber plate with the comment bubble, so the icon reads
