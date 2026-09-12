@@ -3,6 +3,12 @@
 All notable changes to Redline are documented here. Versions follow [semantic
 versioning](https://semver.org); dates are ISO.
 
+## 0.3.4 — 2026-09-12
+
+- New Marketplace icon: an amber plate with the comment bubble, so the icon reads
+  the same on the white Marketplace page and in a dark VS Code extension list.
+- The README points at the Marketplace for installation.
+
 ## 0.3.3 — 2026-09-12
 
 - The package is named `redline-markdown-comments`, so the extension id is
